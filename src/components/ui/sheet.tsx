@@ -53,6 +53,7 @@ function Sheet({ children, ...props }: SheetProps) {
             <SheetPrimitive.Root
                 data-slot="sheet"
                 {...props}
+                open={isOpen}
                 onOpenChange={handleOpenChange}
             >
                 {children}

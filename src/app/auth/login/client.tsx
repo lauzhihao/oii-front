@@ -34,7 +34,7 @@ function LoginClient() {
     return (
         <main className={styles['login-page']}>
             <div className={styles['login-page__container']}>
-                <h1 className={styles['login-page__title']}>Welcome to Tapi</h1>
+                <h1 className={styles['login-page__title']}>Welcome to Daoer</h1>
                 <div className={styles['login-page__card']}>
                     <div className={styles['login-page__content']}>
                         {/* Google 登录按钮 */}

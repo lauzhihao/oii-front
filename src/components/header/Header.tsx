@@ -16,12 +16,14 @@ interface HeaderProps {
     enableScrollOpacity?: boolean,
     className?: string,
     componentOnLeft?: React.ReactNode,
+    componentOnRight?: React.ReactNode,
 }
 
 function Header({
     enableScrollOpacity = true,
     className,
     componentOnLeft,
+    componentOnRight,
 }: HeaderProps) {
     const [scrollOpacity, setScrollOpacity] = useState(0);
 
@@ -84,7 +86,7 @@ function Header({
                         <span
                             className={styles.header_logo_text}
                         >
-                            Tapi
+                            Daoer
                         </span>
                     </div>
                 </Link>
@@ -93,6 +95,7 @@ function Header({
                 'header_interaction',
                 styles.header_interaction,
             )}>
+                {componentOnRight}
                 <UserInteractButton />
             </div>
         </header >

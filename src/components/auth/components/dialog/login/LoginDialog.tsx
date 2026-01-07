@@ -513,7 +513,7 @@ export default function LoginDialog() {
         >
             <div className={styles.loginDialog_content_logo}>
                 <TapiIcon className={styles.loginDialog_content_logo_icon} />
-                <span className={styles.loginDialog_content_logo_text}>Tapi</span>
+                <span className={styles.loginDialog_content_logo_text}>Daoer</span>
             </div>
 
             <AnimatePresence mode='wait'>
@@ -567,7 +567,7 @@ export default function LoginDialog() {
                     >
                         <div className={styles.loginDialog_content_title}>
                             <span className={styles.loginDialog_content_title_text}>
-                                Welcome to Tapi
+                                Welcome to Daoer
                             </span>
                         </div>
 

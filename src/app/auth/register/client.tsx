@@ -98,7 +98,7 @@ function RegisterClient() {
     return (
         <main className={styles['register-page']}>
             <div className={styles['register-page__container']}>
-                <h1 className={styles['register-page__title']}>Welcome to Tapi</h1>
+                <h1 className={styles['register-page__title']}>Welcome to Daoer</h1>
                 <div className={styles['register-page__card']}>
                     <div className={styles['register-page__content']}>
                         {error && (

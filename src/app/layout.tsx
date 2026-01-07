@@ -98,7 +98,7 @@ const nicoMoji = localFont({
 
 
 export const metadata: Metadata = {
-  title: "Tapi",
+  title: "Daoer",
   description: "A content community powered by AI Remix",
   keywords: 'tapi, tapi ai, AI Remix, content community, AI assistant',
   openGraph: {
@@ -124,21 +124,21 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`
-          ${geistSans.variable} 
-          ${geistMono.variable} 
-          ${roboto.variable} 
-          ${plusJakarta.variable} 
-          ${sourceSerif4.variable} 
-          ${notoSans.variable}
-          ${poppins.variable}
-          ${nicoMoji.variable}
-          ${openSans.variable}
-          ${inter.variable}
-          ${nunitoSans.variable}
-          antialiased
-          light
-          `}
+        className={[
+          geistSans.variable,
+          geistMono.variable,
+          roboto.variable,
+          plusJakarta.variable,
+          sourceSerif4.variable,
+          notoSans.variable,
+          poppins.variable,
+          nicoMoji.variable,
+          openSans.variable,
+          inter.variable,
+          nunitoSans.variable,
+          "antialiased",
+          "light",
+        ].join(" ")}
       >
         <MainLayout>
           {children}

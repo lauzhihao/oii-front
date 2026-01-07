@@ -6,15 +6,39 @@
     flex-direction: row;
     flex-wrap: nowrap;
     background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    position: relative;
 }
 
-/* 聊天区域 */
-.chat_area {
-    width: 100%;
-    height: 100%;
-    max-width: 420px;
-    min-width: 320px;
-    flex-shrink: 0;
+/* 聊天触发按钮 - 右下角悬浮 */
+.chat_trigger {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.chat_trigger:hover {
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    transform: scale(1.05);
+}
+
+/* Sheet 内容样式 */
+.chat_sheet_content {
+    width: 420px !important;
+    max-width: 90vw !important;
+    padding: 0 !important;
 }
 
 /* 内容区域 */

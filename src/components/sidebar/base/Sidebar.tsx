@@ -171,7 +171,7 @@ function BaseSidebar({
                             <span className={styles.footer_link_text}
                             >Terms</span>{' of Service'}
                         </Link>
-                        <span className={styles.footer_link}>© 2025 Tapi Ai</span>
+                        <span className={styles.footer_link}>© 2025 VOOICE Ai</span>
                     </div>
                     <div className={cn(
                         'flex flex-row flex-nowrap gap-3 transition-all duration-300',
@@ -179,7 +179,7 @@ function BaseSidebar({
                     )}>
                         <Link
                             target="_blank"
-                            href={process.env.NEXT_PUBLIC_DISCORD_URL ?? "https://discord.com/invite/P8ReQTqZGu"}
+                            href={process.env.NEXT_PUBLIC_DISCORD_URL ?? "https://www.vooice.tech"}
                             className={cn(
                                 styles.footer_link_icon_wrapper,
                             )}
@@ -188,7 +188,7 @@ function BaseSidebar({
                         </Link>
                         <Link
                             target="_blank"
-                            href={process.env.NEXT_PUBLIC_TWITTER_URL ?? "https://x.com/real_tapi_ai"}
+                            href={process.env.NEXT_PUBLIC_TWITTER_URL ?? "https://www.vooice.tech"}
                             className={styles.footer_link_icon_wrapper}>
                             <TwitterIcon />
                         </Link>

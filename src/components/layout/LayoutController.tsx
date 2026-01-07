@@ -9,6 +9,8 @@ import {
     SidebarProvider,
 } from "@/components/ui/sidebar";
 import { AppSidebar, Sidebar_Sheet } from "../sidebar";
+import { useCreateStore } from "@/components/page-create/stores/create-store";
+import { MessageSquare } from 'lucide-react';
 
 /**
  * 控制页面中Header与Sidebar是否显示的组件
@@ -24,6 +26,12 @@ export default function LayoutController({ children }: { children: React.ReactNo
     const [sidebarActiveTab, setSidebarActiveTab] = useState<string>(SidebarTabEnum.None);
 
     const pathname = usePathname();
+
+    // 聊天Sheet状态
+    const toggleChat = useCreateStore((state) => state.toggleChat);
+
+    // 判断是否为首页
+    const isHomePage = pathname === '/';
 
     /**
      * 根据当前路径设置对应的sidebar tab
@@ -92,6 +100,22 @@ export default function LayoutController({ children }: { children: React.ReactNo
                         setActiveTab={setSidebarActiveTab}
                     />
                 )}
+                componentOnRight={isHomePage ? (
+                    <button
+                        onClick={toggleChat}
+                        className={cn(
+                            'flex items-center justify-center',
+                            'w-9 h-9 rounded-lg',
+                            'bg-white/90 hover:bg-white',
+                            'border border-black/8',
+                            'shadow-sm hover:shadow-md',
+                            'cursor-pointer transition-all duration-200',
+                            'hover:scale-105'
+                        )}
+                    >
+                        <MessageSquare className="size-4" />
+                    </button>
+                ) : undefined}
             />}
             <div
                 className={cn(

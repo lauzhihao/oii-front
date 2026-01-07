@@ -38,15 +38,24 @@ export default function Chat_Create() {
 
     // 初始化加载消息
     useEffect(() => {
+        let isMounted = true;
+        setMessages([]); // 重置消息列表，防止 Strict Mode 重复添加
         setIsLoading(true);
         mockFetchChatStream(
             (message) => {
-                setMessages((prev) => [...prev, message]);
+                if (isMounted) {
+                    setMessages((prev) => [...prev, message]);
+                }
             },
             () => {
-                setIsLoading(false);
+                if (isMounted) {
+                    setIsLoading(false);
+                }
             }
         );
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
     // 消息更新时滚动到底部
