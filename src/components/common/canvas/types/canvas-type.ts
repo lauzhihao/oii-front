@@ -84,6 +84,10 @@ export interface CanvasProps {
     offset?: Point;
     /** 受控模式：偏移量变化时的回调 */
     onOffsetChange?: (offset: Point) => void;
+    /** 受控模式：当前选中的item ID */
+    selectedItemId?: string | null;
+    /** 选中item时的回调 */
+    onItemSelect?: (id: string | null) => void;
 }
 
 // ==================== Hook返回类型 ====================

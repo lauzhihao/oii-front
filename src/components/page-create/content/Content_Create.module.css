@@ -52,12 +52,12 @@
     color: #999;
 }
 
-/* 持久连接线层 */
+/* 持久连接线层 - z-index: 0 让连接线在卡片下方显示 */
 .connections_layer {
     position: absolute;
     inset: 0;
     pointer-events: none;
-    z-index: 1;
+    z-index: 0;
     overflow: visible;
 }
 

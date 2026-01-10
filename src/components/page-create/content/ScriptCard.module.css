@@ -1,0 +1,439 @@
+.script_card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+    border-radius: 12px;
+    /* 允许 connector 按钮显示在边界外 */
+    overflow: visible;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 2px solid transparent;
+    transition: border-color 0.2s ease;
+    /* 文字缩小到 60% */
+    font-size: 0.6em;
+}
+
+.script_card:hover {
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* 头部区域 */
+.header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 12px 8px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.file_icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: #f5f5f5;
+    color: #666;
+    flex-shrink: 0;
+}
+
+.file_icon_txt {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.file_icon_md {
+    background: #f3e5f5;
+    color: #7b1fa2;
+}
+
+.file_icon_pdf {
+    background: #ffebee;
+    color: #c62828;
+}
+
+.file_icon_doc {
+    background: #e3f2fd;
+    color: #1565c0;
+}
+
+.file_name {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 500;
+    color: #333;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.delete_btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    color: #999;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.delete_btn:hover {
+    background: #fee2e2;
+    color: #ef4444;
+}
+
+/* 内容区域 */
+.content_area {
+    flex: 1;
+    padding: 12px;
+    overflow: hidden;
+    position: relative;
+}
+
+.content_text {
+    font-size: 12px;
+    line-height: 1.6;
+    color: #555;
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 8;
+    -webkit-box-orient: vertical;
+}
+
+.content_text_expanded {
+    -webkit-line-clamp: unset;
+    overflow-y: auto;
+    max-height: 300px;
+}
+
+/* 可编辑文本区域 */
+.content_textarea {
+    width: 100%;
+    height: 100%;
+    min-height: 80px;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #555;
+    background: transparent;
+    border: none;
+    outline: none;
+    resize: none;
+    font-family: inherit;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.content_textarea:focus {
+    background: #fafafa;
+    border-radius: 4px;
+}
+
+.expand_btn {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    padding: 4px 8px;
+    font-size: 11px;
+    color: #666;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.expand_btn:hover {
+    background: #f5f5f5;
+    color: #333;
+}
+
+/* 加载状态 */
+.loading_container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #999;
+}
+
+.loading_spinner {
+    width: 24px;
+    height: 24px;
+    border: 2px solid #e0e0e0;
+    border-top-color: #666;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.loading_text {
+    font-size: 12px;
+}
+
+/* 错误状态 */
+.error_container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px;
+    color: #ef4444;
+}
+
+.error_icon {
+    color: #ef4444;
+}
+
+.error_text {
+    font-size: 12px;
+    text-align: center;
+    color: #666;
+}
+
+/* 警告提示 */
+.warning_container {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 10px;
+    margin-bottom: 8px;
+    font-size: 12px;
+    color: #b45309;
+    background: #fef3c7;
+    border: 1px solid #fcd34d;
+    border-radius: 6px;
+}
+
+/* 底部区域 */
+.footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    border-top: 1px solid #f0f0f0;
+    background: #fafafa;
+}
+
+.meta_info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: #999;
+}
+
+.file_type_badge {
+    padding: 2px 6px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+/* 提交解析按钮 */
+.submit_btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #fff;
+    background: linear-gradient(135deg, #4285F4, #34A853);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.submit_btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(66, 133, 244, 0.4);
+}
+
+.submit_btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.submit_btn_loading {
+    background: #999;
+    cursor: not-allowed;
+}
+
+.submit_btn_disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* 连接点 - 完全显示在卡片右侧边缘 */
+.connector {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translate(50%, -50%);
+    z-index: 100;
+}
+
+.connector_btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border: none;
+    background: linear-gradient(135deg, #4285F4, #34A853);
+    color: white;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.connector_btn:hover {
+    transform: scale(1.2);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* 头部操作按钮容器 */
+.header_actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+/* 编辑按钮 */
+.edit_btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    color: #999;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.edit_btn:hover {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+/* 保存按钮 */
+.save_btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    color: #22c55e;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.save_btn:hover {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+/* 取消按钮 */
+.cancel_btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    color: #ef4444;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cancel_btn:hover {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+/* 内容预览区域 */
+.content_preview {
+    width: 100%;
+    height: 100%;
+    min-height: 80px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #555;
+}
+
+/* 修改标记 */
+.modified_badge {
+    padding: 2px 6px;
+    background: #fef3c7;
+    color: #b45309;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 500;
+}
+
+/* 开始创作按钮 */
+.create_btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #fff;
+    background: linear-gradient(135deg, #4285F4, #34A853);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.create_btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(66, 133, 244, 0.4);
+}
+
+.create_btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.create_btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.create_btn_loading {
+    background: #999;
+    cursor: not-allowed;
+}

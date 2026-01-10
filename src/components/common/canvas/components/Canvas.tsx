@@ -182,6 +182,8 @@ export default function Canvas({
     onScaleChange,
     offset: controlledOffset,
     onOffsetChange,
+    selectedItemId: controlledSelectedItemId,
+    onItemSelect,
 }: CanvasProps) {
     // 容器ref
     const containerRef = useRef<HTMLDivElement>(null);
@@ -255,8 +257,10 @@ export default function Canvas({
     const [isPanning, setIsPanning] = useState(false);
     const [panStart, setPanStart] = useState<Point>({ x: 0, y: 0 });
 
-    // 当前选中的item
-    const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+    // 当前选中的item（支持受控和非受控模式）
+    const [internalSelectedItemId, setInternalSelectedItemId] = useState<string | null>(null);
+    const isSelectedControlled = controlledSelectedItemId !== undefined;
+    const selectedItemId = isSelectedControlled ? controlledSelectedItemId : internalSelectedItemId;
 
     // 正在拖拽的item状态
     const [draggingItem, setDraggingItem] = useState<{
@@ -651,6 +655,16 @@ export default function Canvas({
     // ==================== 画布操作 ====================
 
     /**
+     * 更新选中状态（同时支持受控和非受控模式）
+     */
+    const updateSelectedItemId = useCallback((id: string | null) => {
+        if (!isSelectedControlled) {
+            setInternalSelectedItemId(id);
+        }
+        onItemSelect?.(id);
+    }, [isSelectedControlled, onItemSelect]);
+
+    /**
      * 处理鼠标按下事件
      */
     const handleMouseDown = useCallback(
@@ -679,11 +693,11 @@ export default function Canvas({
 
                 // 点击空白处取消选中
                 if (e.target === e.currentTarget) {
-                    setSelectedItemId(null);
+                    updateSelectedItemId(null);
                 }
             }
         },
-        [mode, isAnimating, stopFitAnimation]
+        [mode, isAnimating, stopFitAnimation, updateSelectedItemId]
     );
 
     /**
@@ -754,8 +768,8 @@ export default function Canvas({
      * 选中item
      */
     const handleItemSelect = useCallback((id: string) => {
-        setSelectedItemId(id);
-    }, []);
+        updateSelectedItemId(id);
+    }, [updateSelectedItemId]);
 
     // ==================== 全局事件监听 ====================
 

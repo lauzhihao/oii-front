@@ -13,8 +13,69 @@
 
 import { generateDeviceId, getUserUTCOffset } from '@/utils/firebase/DeviceLocationUtils';
 import axios, {
-    AxiosHeaders
+    AxiosError,
+    AxiosHeaders,
+    AxiosResponse,
+    InternalAxiosRequestConfig
 } from 'axios';
+import { toast } from 'sonner';
+
+// 扩展 AxiosRequestConfig 类型，添加自定义配置选项
+declare module 'axios' {
+    interface InternalAxiosRequestConfig {
+        // 设置为 true 时跳过自动显示错误提示
+        skipErrorToast?: boolean;
+    }
+}
+
+// API 错误响应类型
+interface ApiErrorResponse {
+    detail?: string;
+}
+
+// HTTP 状态码对应的默认错误提示
+const HTTP_ERROR_MESSAGES: Record<number, string> = {
+    400: 'Request error',
+    401: 'Please login first',
+    403: 'Access denied',
+    404: 'Resource not found',
+    422: 'Invalid request parameters',
+    500: 'Server error, please try again later',
+    502: 'Server error, please try again later',
+    503: 'Service unavailable, please try again later',
+    504: 'Request timeout, please try again later',
+};
+
+/**
+ * 获取错误提示信息
+ * 优先使用后端返回的 detail 字段，否则使用默认提示
+ */
+function getErrorMessage(error: AxiosError<ApiErrorResponse>): string {
+    // 优先使用后端返回的错误信息
+    const detail = error.response?.data?.detail;
+    if (detail && typeof detail === 'string') {
+        return detail;
+    }
+
+    // 根据状态码返回默认提示
+    const status = error.response?.status;
+    if (status && HTTP_ERROR_MESSAGES[status]) {
+        return HTTP_ERROR_MESSAGES[status];
+    }
+
+    // 网络错误
+    if (error.code === 'ERR_NETWORK') {
+        return 'Network error, please check your connection';
+    }
+
+    // 请求超时
+    if (error.code === 'ECONNABORTED') {
+        return 'Request timeout, please try again later';
+    }
+
+    // 默认错误提示
+    return 'Request failed, please try again later';
+}
 
 // 响应数据类型定义
 // interface ApiResponse<T = unknown> {
@@ -98,13 +159,33 @@ apiClient.interceptors.request.use(
 );
 
 /**
-* 响应拦截器
-*/
-// apiClient.interceptors.response.use(
-//     (response: AxiosResponse) => response,
-//     async (error: AxiosError<ApiResponse>) => {
+ * 响应拦截器
+ * 统一处理错误响应并显示友好提示
+ */
+apiClient.interceptors.response.use(
+    (response: AxiosResponse) => response,
+    (error: AxiosError<ApiErrorResponse>) => {
+        const config = error.config as InternalAxiosRequestConfig | undefined;
 
-//         // 使用错误处理工具函数处理错误并显示友好提示
-//         console.log('axios error : ', error)
-//     }
-// );
+        // 检查是否需要跳过错误提示
+        const skipErrorToast = config?.skipErrorToast;
+
+        if (!skipErrorToast) {
+            const message = getErrorMessage(error);
+            toast.error(message);
+        }
+
+        // 开发环境下打印错误详情
+        if (process.env.NODE_ENV === 'development') {
+            console.error('[API Error]', {
+                url: config?.url,
+                method: config?.method?.toUpperCase(),
+                status: error.response?.status,
+                message: error.message,
+                detail: error.response?.data?.detail,
+            });
+        }
+
+        return Promise.reject(error);
+    }
+);

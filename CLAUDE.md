@@ -3,6 +3,12 @@
 回答问题和编写代码（特别是输出日志）时不要加入任何表情符号。
 禁止：生成任何文档，只需帮我修改代码。
 
+**知识库管理规则（重要）**：
+- 项目知识库文件：`KNOWLEDGE.md`
+- **禁止**：未经用户明确同意，AI 不得自行追加或修改知识库内容
+- **允许**：AI 可随时读取知识库内容作为参考
+- **流程**：如需更新知识库，AI 必须先向用户说明要添加/修改的内容，获得用户明确同意（如"可以"、"同意"、"好的"等）后才能执行修改
+
 **字符限制（重要）**：
 - 禁止在代码中使用任何 Unicode 特殊字符，包括但不限于：
   - Emoji 表情符号（如: 🔍📋✅❌⚠️💡🎉等）
@@ -652,6 +658,33 @@ src/
 - 自动附加 `Device-ID` header
 - 自动附加 `User-Timezone` header
 - timeout: 600秒
+- 全局错误处理：自动捕获异常并通过 toast 显示友好提示
+
+**API 调用方式**:
+
+```typescript
+import { apiClient } from '@/lib/axios';
+
+// 1. 默认调用：自动显示错误提示，调用方无需处理错误
+const response = await apiClient.get('/api/endpoint');
+const data = await apiClient.post('/api/endpoint', { key: 'value' });
+
+// 2. 静默调用：跳过自动错误提示（适用于轮询、后台请求等场景）
+const response = await apiClient.get('/api/endpoint', {
+    skipErrorToast: true
+});
+
+// 3. 跳过自动附加 Authorization（适用于公开接口）
+const response = await apiClient.get('/api/public', {
+    headers: { 'Skip-Authorization': true }
+});
+```
+
+**错误处理逻辑**:
+- 优先显示后端返回的 `detail` 字段
+- 无 detail 时根据 HTTP 状态码显示默认提示（401/403/404/422/500/502/503/504）
+- 网络错误、超时等特殊情况有对应提示
+- 开发环境下在控制台打印详细错误信息
 
 ## 样式系统
 
@@ -697,3 +730,32 @@ NEXT_PUBLIC_TWITTER_URL       # Twitter链接
 - `perf`: 性能优化
 - `test`: 测试
 - `chore`: 杂项
+
+<!-- BACKLOG.MD MCP GUIDELINES START -->
+
+<CRITICAL_INSTRUCTION>
+
+## BACKLOG WORKFLOW INSTRUCTIONS
+
+This project uses Backlog.md MCP for all task and project management activities.
+
+**CRITICAL GUIDANCE**
+
+- If your client supports MCP resources, read `backlog://workflow/overview` to understand when and how to use Backlog for this project.
+- If your client only supports tools or the above request fails, call `backlog.get_workflow_overview()` tool to load the tool-oriented overview (it lists the matching guide tools).
+
+- **First time working here?** Read the overview resource IMMEDIATELY to learn the workflow
+- **Already familiar?** You should have the overview cached ("## Backlog.md Overview (MCP)")
+- **When to read it**: BEFORE creating tasks, or when you're unsure whether to track work
+
+These guides cover:
+- Decision framework for when to create tasks
+- Search-first workflow to avoid duplicates
+- Links to detailed guides for task creation, execution, and completion
+- MCP tools reference
+
+You MUST read the overview resource to understand the complete workflow. The information is NOT summarized here.
+
+</CRITICAL_INSTRUCTION>
+
+<!-- BACKLOG.MD MCP GUIDELINES END -->

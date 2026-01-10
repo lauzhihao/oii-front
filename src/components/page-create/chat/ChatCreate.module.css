@@ -254,3 +254,353 @@
     height: 2rem;
     background: linear-gradient(135deg, #fda4af 0%, #f9a8d4 100%);
 }
+
+/* 停止按钮 */
+.chat-create__stop-btn {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 50%;
+    color: #ef4444;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: #fee2e2;
+        border-color: #fca5a5;
+    }
+}
+
+/* 空状态 */
+.chat-create__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 3rem 1rem;
+    color: #9ca3af;
+}
+
+.chat-create__empty-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    color: #d1d5db;
+}
+
+.chat-create__empty p {
+    font-size: 0.875rem;
+    text-align: center;
+}
+
+/* 流式光标 */
+.chat-create__cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1em;
+    background: #7c3aed;
+    margin-left: 2px;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+/* 用户消息 */
+.chat-create__message--user {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(135deg, #ede9fe 0%, #f3e8ff 100%);
+    border: 1px solid #ddd6fe;
+    border-radius: 0.75rem;
+}
+
+.chat-create__user-badge {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    background: #7c3aed;
+    border-radius: 50%;
+    color: white;
+}
+
+/* 思考消息 */
+.chat-create__message--thinking {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: #f9fafb;
+    border-left: 2px solid #d1d5db;
+    border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.chat-create__thinking-icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9ca3af;
+}
+
+.chat-create__thinking-text {
+    font-size: 0.8125rem;
+    color: #6b7280;
+    font-style: italic;
+}
+
+/* 工具调用消息 */
+.chat-create__message--tool {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: #fffbeb;
+    border: 1px solid #fef3c7;
+    border-radius: 0.5rem;
+}
+
+.chat-create__tool-icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #f59e0b;
+}
+
+.chat-create__tool-icon--done {
+    color: #10b981;
+}
+
+.chat-create__tool-icon--failed {
+    color: #ef4444;
+}
+
+.chat-create__tool-text {
+    font-size: 0.8125rem;
+    color: #92400e;
+}
+
+/* 错误消息 */
+.chat-create__message--error {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 0.75rem;
+}
+
+.chat-create__error-icon {
+    flex-shrink: 0;
+    color: #ef4444;
+}
+
+.chat-create__error-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.chat-create__error-text {
+    font-size: 0.875rem;
+    color: #991b1b;
+}
+
+.chat-create__retry-btn {
+    align-self: flex-start;
+    padding: 0.25rem 0.75rem;
+    background: white;
+    border: 1px solid #fecaca;
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    color: #ef4444;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: #fee2e2;
+    }
+}
+
+/* 警告消息 */
+.chat-create__message--warning {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: #fffbeb;
+    border: 1px solid #fef3c7;
+    border-left: 3px solid #f59e0b;
+    border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.chat-create__warning-icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #f59e0b;
+}
+
+.chat-create__warning-text {
+    font-size: 0.8125rem;
+    color: #92400e;
+}
+
+/* 工具结果展示 - 通用容器 */
+.chat-create__tool-result {
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px dashed rgba(0, 0, 0, 0.1);
+}
+
+/* 工具结果 - 角色标签列表 */
+.chat-create__character-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+}
+
+.chat-create__character-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+    background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+    border: 1px solid #c4b5fd;
+    border-radius: 1rem;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    color: #7c3aed;
+}
+
+/* 工具结果 - 图片缩略图 */
+.chat-create__image-preview {
+    width: 100%;
+    max-width: 120px;
+    aspect-ratio: 1;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: #f3f4f6;
+}
+
+.chat-create__image-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 工具结果 - Prompt 预览 */
+.chat-create__prompt-preview {
+    font-size: 0.6875rem;
+    color: #6b7280;
+    line-height: 1.4;
+    max-height: 2.8em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+/* Canvas 角色卡片消息 */
+.chat-create__message--canvas {
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+    border: 1px solid #bbf7d0;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: linear-gradient(135deg, #dcfce7 0%, #d1fae5 100%);
+        border-color: #86efac;
+    }
+}
+
+.chat-create__canvas-image {
+    flex-shrink: 0;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    border: 2px solid #86efac;
+    background: #f3f4f6;
+}
+
+.chat-create__canvas-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.chat-create__canvas-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    color: #16a34a;
+}
+
+.chat-create__canvas-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.chat-create__canvas-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #166534;
+}
+
+.chat-create__canvas-desc {
+    font-size: 0.75rem;
+    color: #4ade80;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.chat-create__canvas-role {
+    display: inline-flex;
+    align-self: flex-start;
+    padding: 0.125rem 0.5rem;
+    background: rgba(34, 197, 94, 0.2);
+    border-radius: 1rem;
+    font-size: 0.625rem;
+    font-weight: 500;
+    color: #15803d;
+    text-transform: capitalize;
+}
+
+.chat-create__canvas-action {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    color: #22c55e;
+}

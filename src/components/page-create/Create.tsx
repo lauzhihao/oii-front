@@ -25,7 +25,7 @@ export default function Create() {
                 <SheetContent
                     side="right"
                     className={styles.chat_sheet_content}
-                    sheetOverlayClassName="bg-black/60"
+                    sheetOverlayClassName="bg-black/20"
                 >
                     <SheetTitle className="sr-only">Chat</SheetTitle>
                     <Chat_Create />

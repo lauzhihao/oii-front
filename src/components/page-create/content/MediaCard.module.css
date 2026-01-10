@@ -1,11 +1,12 @@
 /* 媒体卡片容器 */
 .media_card {
+    position: relative;
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
-    border-radius: 8px;
-    overflow: hidden;
+    border-radius: 6px;
+    overflow: visible;
     background: #fff;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     transition: box-shadow 0.2s ease;
@@ -15,25 +16,98 @@
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
+/* idle状态 - 使用自适应高度，减小阴影 */
+.media_card_idle {
+    height: auto;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.media_card_idle:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+/* generating状态动画边框 */
+.media_card_generating_border {
+    position: absolute;
+    inset: -2px;
+    border-radius: 8px;
+    padding: 1.5px;
+    background: linear-gradient(135deg, #4285F4 0%, #34A853 33%, #FBBC05 66%, #4285F4 100%);
+    background-size: 300% 300%;
+    animation: border_gradient_flow 2s ease infinite;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.media_card_generating_border::after {
+    content: '';
+    position: absolute;
+    inset: 1.5px;
+    border-radius: 6px;
+    background: #fff;
+}
+
+@keyframes border_gradient_flow {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
 /* 媒体区域 - 上部 */
 .media_area {
-    flex: 1;
-    min-height: 0;
     position: relative;
     overflow: hidden;
     background: #f5f5f5;
+    /* 使用 grid 技巧实现平滑的高度动画 */
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s ease-out, flex 0.3s ease-out;
+    flex: 0;
+    min-height: 0;
 }
 
-.media_area img,
-.media_area video {
+/* 媒体区域展开状态 */
+.media_area_expanded {
+    grid-template-rows: 1fr;
+    flex: 1;
+}
+
+/* 媒体区域内容包装器 - 用于 grid 动画 */
+.media_area_inner {
+    min-height: 0;
+    overflow: hidden;
+}
+
+.media_area_inner img,
+.media_area_inner video {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     display: block;
+    background: #f5f5f5;
+}
+
+/* 媒体区域内容容器 - 填满媒体区域 */
+.media_content {
+    flex: 1;
+    min-height: 120px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 6px 6px 0 0;
 }
 
 /* 工具栏区域 - 下部 */
 .toolbar {
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -42,23 +116,59 @@
     border-top: 1px solid #f0f0f0;
 }
 
+/* 提示词输入框容器 - 用于渐变边框 */
+.prompt_input_wrapper {
+    position: relative;
+    border-radius: 6px;
+    padding: 1px;
+    background: #e5e5e5;
+    transition: background 0.2s ease;
+}
+
+.prompt_input_wrapper:focus-within {
+    background: linear-gradient(135deg, #4285F4 0%, #34A853 50%, #FBBC05 100%);
+}
+
+/* loading状态 - 循环变色动画 */
+.prompt_input_wrapper_loading {
+    background: linear-gradient(135deg, #4285F4 0%, #34A853 33%, #FBBC05 66%, #4285F4 100%);
+    background-size: 300% 300%;
+    animation: gradient_flow 2s ease infinite;
+}
+
+@keyframes gradient_flow {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
 /* 提示词输入框 */
 .prompt_input {
+    display: block;
     width: 100%;
+    min-height: 36px;
+    max-height: 200px;
     padding: 8px 10px;
     font-size: 12px;
+    line-height: 1.5;
     color: #333;
     background: #f5f5f5;
-    border: 1px solid #e5e5e5;
-    border-radius: 6px;
+    border: none;
+    border-radius: 5px;
     outline: none;
     resize: none;
-    transition: all 0.2s ease;
+    overflow-y: auto;
+    transition: background 0.2s ease;
 }
 
 .prompt_input:focus {
     background: #fff;
-    border-color: #4285F4;
 }
 
 .prompt_input:disabled {
@@ -112,14 +222,16 @@
     justify-content: center;
     border: none;
     border-radius: 6px;
-    background: linear-gradient(135deg, #4285F4 0%, #34A853 100%);
-    color: #fff;
+    background: transparent;
+    color: #666;
     cursor: pointer;
     transition: all 0.2s ease;
     flex-shrink: 0;
 }
 
 .submit_btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, #4285F4 0%, #34A853 100%);
+    color: #fff;
     transform: scale(1.05);
     box-shadow: 0 2px 8px rgba(66, 133, 244, 0.4);
 }
@@ -131,6 +243,7 @@
 
 .submit_btn_stop {
     background: linear-gradient(135deg, #EA4335 0%, #FBBC05 100%);
+    color: #fff;
 }
 
 /* 删除按钮 */
@@ -211,6 +324,7 @@
     background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
     background-size: 200% 100%;
     animation: skeleton_wave 1.5s ease-in-out infinite;
+    border-radius: 6px 6px 0 0;
 }
 
 @keyframes skeleton_wave {

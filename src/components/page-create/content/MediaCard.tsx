@@ -73,6 +73,8 @@ export interface MediaCardProps {
     onDelete?: () => void;
     /** 生成回调 */
     onGenerate?: (params: GenerateEventParams) => void;
+    /** 尺寸变化回调 */
+    onSizeChange?: (size: { width: number; height: number }) => void;
 }
 
 // 连接线起点和终点
@@ -102,6 +104,7 @@ export default function MediaCard({
     onStop,
     onDelete,
     onGenerate,
+    onSizeChange,
 }: MediaCardProps) {
     // 媒体加载状态（仅用于completed状态时媒体的浏览器加载）
     const [isMediaLoading, setIsMediaLoading] = useState(true);
@@ -111,8 +114,11 @@ export default function MediaCard({
     const defaultModel = modelOptions[0].value;
     const currentModel = model || defaultModel;
 
-    // 是否显示loading状态（idle无媒体、generating生成中、completed但媒体未加载完）
-    const showLoading = status === 'idle' || status === 'generating' || (status === 'completed' && src && isMediaLoading);
+    // 是否显示媒体区域（非idle状态时展开）
+    const showMediaArea = status !== 'idle';
+
+    // 是否显示loading状态（generating生成中、completed但媒体未加载完）
+    const showLoading = status === 'generating' || (status === 'completed' && src && isMediaLoading);
 
     // 是否禁用输入（generating状态时禁用）
     const isInputDisabled = status === 'generating';
@@ -219,67 +225,145 @@ export default function MediaCard({
         return `M ${startX} ${startY} C ${startX + controlOffset} ${startY}, ${endX - controlOffset} ${endY}, ${endX} ${endY}`;
     };
 
+    // textarea ref - 用于自动调整高度
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+    // 工具栏 ref - 用于计算实际需要的高度
+    const toolbarRef = useRef<HTMLDivElement>(null);
+
+    // 自动调整 textarea 高度
+    const adjustTextareaHeight = useCallback(() => {
+        const textarea = textareaRef.current;
+        if (textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = `${textarea.scrollHeight}px`;
+        }
+    }, []);
+
+    // 计算并报告卡片需要的尺寸（仅在 idle 状态下）
+    const reportSizeIfNeeded = useCallback(() => {
+        // 只有 idle 状态（无媒体预览）时才动态计算尺寸
+        if (status !== 'idle' || !onSizeChange) return;
+
+        const toolbar = toolbarRef.current;
+        if (!toolbar) return;
+
+        requestAnimationFrame(() => {
+            const toolbarRect = toolbar.getBoundingClientRect();
+            // idle 状态下，高度 = 工具栏高度，宽度保持 280
+            onSizeChange({
+                width: 280,
+                height: Math.ceil(toolbarRect.height),
+            });
+        });
+    }, [status, onSizeChange]);
+
+    // 组件挂载时报告初始尺寸
+    useEffect(() => {
+        reportSizeIfNeeded();
+    }, [reportSizeIfNeeded]);
+
+    // prompt 变化时调整高度并报告尺寸
+    useEffect(() => {
+        adjustTextareaHeight();
+        reportSizeIfNeeded();
+    }, [prompt, adjustTextareaHeight, reportSizeIfNeeded]);
+
+    // 处理输入框滚轮事件 - 阻止冒泡到画布
+    const handleTextareaWheel = useCallback((e: React.WheelEvent) => {
+        e.stopPropagation();
+    }, []);
+
+    // 处理提示词变化 - 限制1000字符
+    const handlePromptInputChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const value = e.target.value;
+        if (value.length <= 1000) {
+            onPromptChange?.(value);
+        }
+    }, [onPromptChange]);
+
     return (
-        <div className={styles.media_card}>
-            {/* 媒体区域 */}
-            <div className={cn(styles.media_area, showLoading && styles.media_loading)}>
-                {/* Skeleton 加载动画 - idle/generating/媒体加载中时显示 */}
-                {showLoading && (
-                    <>
-                        <div className={styles.skeleton} />
-                        <div className={styles.media_loading_icon}>
-                            {type === 'image' ? (
-                                <ImageIcon className="size-8" />
-                            ) : (
-                                <Film className="size-8" />
-                            )}
-                        </div>
-                    </>
-                )}
+        <div className={cn(
+            styles.media_card,
+            status === 'idle' && styles.media_card_idle
+        )}>
+            {/* generating状态动画边框 */}
+            {status === 'generating' && (
+                <div className={styles.media_card_generating_border} />
+            )}
 
-                {/* 图片 - completed状态且有src时渲染 */}
-                {status === 'completed' && type === 'image' && src && (
-                    <img
-                        src={src}
-                        alt="Generated Image"
-                        draggable={false}
-                        onLoad={handleMediaLoad}
-                        style={{ opacity: isMediaLoading ? 0 : 1, transition: 'opacity 0.3s ease' }}
-                    />
-                )}
-
-                {/* 视频 - completed状态且有src时渲染 */}
-                {status === 'completed' && type === 'video' && src && (
-                    <>
-                        <video
-                            src={src}
-                            muted
-                            preload="metadata"
-                            onLoadedMetadata={handleMediaLoad}
-                            style={{ opacity: isMediaLoading ? 0 : 1, transition: 'opacity 0.3s ease' }}
-                        />
-                        {!isMediaLoading && (
-                            <div className={styles.video_overlay}>
-                                <div className={styles.play_icon}>
-                                    <Play className="size-5" />
+            {/* 媒体区域 - 使用 grid 动画展开/收起 */}
+            <div className={cn(
+                styles.media_area,
+                showMediaArea && styles.media_area_expanded
+            )}>
+                <div className={styles.media_area_inner}>
+                    <div className={cn(styles.media_content, showLoading && styles.media_loading)}>
+                        {/* Skeleton 加载动画 - generating/媒体加载中时显示 */}
+                        {showLoading && (
+                            <>
+                                <div className={styles.skeleton} />
+                                <div className={styles.media_loading_icon}>
+                                    {type === 'image' ? (
+                                        <ImageIcon className="size-8" />
+                                    ) : (
+                                        <Film className="size-8" />
+                                    )}
                                 </div>
-                            </div>
+                            </>
                         )}
-                    </>
-                )}
+
+                        {/* 图片 - completed状态且有src时渲染 */}
+                        {status === 'completed' && type === 'image' && src && (
+                            <img
+                                src={src}
+                                alt="Generated Image"
+                                draggable={false}
+                                onLoad={handleMediaLoad}
+                                style={{ opacity: isMediaLoading ? 0 : 1, transition: 'opacity 0.3s ease' }}
+                            />
+                        )}
+
+                        {/* 视频 - completed状态且有src时渲染 */}
+                        {status === 'completed' && type === 'video' && src && (
+                            <>
+                                <video
+                                    src={src}
+                                    muted
+                                    preload="metadata"
+                                    onLoadedMetadata={handleMediaLoad}
+                                    style={{ opacity: isMediaLoading ? 0 : 1, transition: 'opacity 0.3s ease' }}
+                                />
+                                {!isMediaLoading && (
+                                    <div className={styles.video_overlay}>
+                                        <div className={styles.play_icon}>
+                                            <Play className="size-5" />
+                                        </div>
+                                    </div>
+                                )}
+                            </>
+                        )}
+                    </div>
+                </div>
             </div>
 
             {/* 工具栏区域 */}
-            <div className={styles.toolbar}>
+            <div ref={toolbarRef} className={styles.toolbar}>
                 {/* 提示词输入框 */}
-                <textarea
-                    className={styles.prompt_input}
-                    placeholder="Enter prompt..."
-                    value={prompt}
-                    onChange={(e) => onPromptChange?.(e.target.value)}
-                    disabled={isInputDisabled}
-                    rows={2}
-                />
+                <div className={cn(
+                    styles.prompt_input_wrapper,
+                    status === 'generating' && styles.prompt_input_wrapper_loading
+                )}>
+                    <textarea
+                        ref={textareaRef}
+                        className={styles.prompt_input}
+                        placeholder="Enter prompt..."
+                        value={prompt}
+                        onChange={handlePromptInputChange}
+                        onWheel={handleTextareaWheel}
+                        disabled={isInputDisabled}
+                        maxLength={1000}
+                    />
+                </div>
 
                 {/* 工具栏控件行 */}
                 <div className={styles.toolbar_controls}>
